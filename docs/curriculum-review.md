@@ -1,0 +1,40 @@
+# Onafhankelijke controle van lesinhoud en uitvoering
+
+Gecontroleerd op 29 oktober 2026: `js/app.js`, `js/engine.js`, `js/curriculum.js` en de werkelijke Python-bibliotheek en dispatcher in `js/python-library.js`. Dit is een inhoudelijke en technische controle; er zijn nog geen leerlingpilots of gemeten leeropbrengsten.
+
+## Bevindingen die tijdens de controle zijn verwerkt
+
+| Bevinding | Gevolg | Verwerking |
+| --- | --- | --- |
+| De arena gebruikte alleen het aantal controles, terwijl opdrachten 2 en 4 controlekosten optimaliseren. | Een bewezen gunstige tijdstrategie kon geen passend voordeel in de arena krijgen. | De arena gebruikt nu `searchCost`; de validatie toont zowel controles als kosten. Kosten zijn expliciet een modelschaal. |
+| De trainingskop suggereerde dat iedere agent vanzelf beter wordt. | De vaste regels uit de eerste opdrachten gebruiken geen q; hun gedrag verandert niet wanneer alleen q leert. | De zichtbare uitleg noemt het verschil tussen vaste regels en q-gebruik. Het leerdoel staat boven de editor. |
+| Vrije Python kon bij wisselen naar blokken door de blokkenrepresentatie worden vervangen. | Leerlingen konden eigen code onverwacht kwijt raken. | De applicatie bewaart de Python-werkplaats nu apart; algemene omzetting van vrije Python naar blokken wordt niet geclaimd. |
+| Import accepteerde extra configuratie en onjuist getypte bewijs- en geschiedenisvelden. | Een docent kon door een geldig JSON-bestand met ongeldige inhoud een vastlopende interface krijgen. | `importAgent` bouwt de ondersteunde velden opnieuw op, controleert typen, grenzen, leskeuze en route, en begrenst werkplaatsinhoud. Regressietests dekken ongeldige invoer. |
+| `frequency` kon worden gelezen als een aangeleerde frequentie. | Een vooraf bekende kansverdeling kon ten onrechte als leerresultaat worden gepresenteerd. | In de lescode en handleiding staat dat `frequency` de bekende modelkans is. `q` is de werkelijk geleerde score; vergelijk beide apart. |
+
+## Wiskunde en daadwerkelijke uitvoering
+
+Alle vijf oorspronkelijke lesagents zijn ongewijzigd in de echte Python-dispatcher gecompileerd en uitgevoerd. De q-geheugencode gebruikt de numerieke symboolsleutels die de runtime aanbiedt. De kaarten in de standaardstand hebben acht iconen. De kans 1/8 bij een uniforme tweede kaart en 1/6 na twee verschillende missers is gecontroleerd door de 56 mogelijke andere kaarten te enumereren.
+
+De vergelijking van drie inspecties is onafhankelijk nagegaan door alle 512 geordende keuzes met herhaling te tellen en daaruit de 336 keuzes zonder herhaling te selecteren. Dit geeft respectievelijk 169/512 en 3/8. De verwachtingen 0,6 s en 0,9 s uit opdracht 2 en de verwisselwinst 0,12 s uit opdracht 4 zijn nagerekend. Voor een concrete acht-iconenverdeling is de p/kost-volgorde vergeleken met alle 40.320 mogelijke volgordes en blijkt zij de minimale verwachte kosten te geven.
+
+De focuswereld geeft niet simpelweg aan ieder zichtbaar focusicoon kans 75%/8. De eigen kaart is al informatie en de kansen moeten daarop geconditioneerd worden. De huidige runtime normaliseert de juiste gewichten. Dit is onafhankelijk gecontroleerd door alle geordende kaartparen te wegen voor q = 3, 5 en 7, en die conditionele kansen met de echte Python-`_candidates` te vergelijken. Alle combinaties kwamen overeen.
+
+De leerstap is echt: er worden kaartparen gegenereerd, de leerlingfunctie wordt uitgevoerd, de eerste inspectie ontvangt een beloning 0 of 1 en het gekozen q-getal verandert volgens de opgegeven leersnelheid. Dit is een klein banditmodel. De andere kaart en de verborgen match worden niet als velden aan `evaluate` gegeven. Validatie gebruikt nieuwe seeds, vergelijkt gedeelde kaartparen en werkt de q-gewichten niet bij. Een trainingsanimatie wordt daarmee ondersteund door daadwerkelijke berekeningen; zij bewijst op zichzelf geen leerwinst.
+
+De toetsen staan in `tests/curriculum.test.js` en `tests/engine.test.js`. Bij deze controle slaagden alle 25 toetsen in die twee bestanden. De afzonderlijke Python-runtime- en browsercontroles behoren daarnaast tot de integratiecontrole van het hele project.
+
+## Grenzen voor gebruik in een les
+
+1. **De route is formatief.** Eén juist instapantwoord opent Python; een onjuist antwoord start met blokken. Een geschreven bewijs heeft een apart veld en rubric en wordt door docent of medeleerling besproken. De website geeft geen automatische bewijsbeoordeling. De eerste beantwoorde instapvraag opent de studio; vijf volledige bewijzen vormen geen technische toegangseis.
+2. **De programmeeropgave duurt tien minuten totaal.** Leerlingen kiezen één van vijf tactieken. De imports, klasse en functie staan al in de startcode; de beslissende score of `if` staat nog op nul en is gemarkeerd met TODO. De leerling vult die regel(s) in, test, vergelijkt honderd nieuwe rondes en verdedigt de keuze. De website beoordeelt de implementatie niet automatisch als voldoende; een werkend basisprogramma kan nog steeds de verkeerde tactiek bevatten. Bij formele beoordeling is een individueel gesprek nodig om eigen begrip te onderscheiden van een overgenomen voorbeeld. [Zie de concrete programmeeropdracht](programming-10-minutes.md).
+3. **Niet-herhalen wordt ook door de engine bewaakt.** De geheugenregel uit opdracht 1 legt het principe uit, maar een agent kan in de huidige API niet een afgekeurd icoon blijven kiezen: die actie is al uit de resterende kandidaten verwijderd. Voor een experimentele vergelijking met herhalen is een aparte simulatie of papieren model nodig.
+4. **Frequentie, leren en zichtbaarheid zijn verschillende zaken.** De bekende modelkans `frequency` is een theoretische referentie. Het aangeleerde q-getal is een globale score per symbool en representeert niet iedere contextspecifieke kans op iedere kaart exact. `cost` is vooraf vastgelegde herkenningslast; een andere upload of iconenset leert de agent geen beeldkenmerken. Het model is geen beeldherkenningsnetwerk.
+5. **De focuswereld is nodig voor het frequentievraagstuk.** In de symmetrische kaartverdeling zijn de acht kandidaatmatches vooraf even waarschijnlijk. Een frequentiescore kan daar niet structureel weten welk icoon de match is. De eerste twee opgaven en de p/kost-redenering blijven zinvol onder hun expliciete aannames.
+6. **Lager aantal controles betekent niet altijd lagere kosten.** De trainingsgrafiek toont inspecties. Gebruik bij opdrachten 2 en 4 ook de kosten in de validatie. De arena telt kosten mee, maar een concrete gewonnen ronde blijft mede afhangen van toevalsvariatie en menselijke reactiesnelheid.
+7. **De arena speelt op een ontworpen tempo.** De vertraging varieert met het zoekwerk en bevat toeval. Er is geen empirische claim dat dit precies de gemiddelde mens van zestien jaar modelleert. Test tempo, leesbaarheid en moeilijkheid met de doelgroep.
+8. **Opslag en delen zijn lokaal en via bestanden.** Een export bevat agentcode, model en leswerk; een docent kan die importeren. Er is geen centrale klasomgeving of automatische verzending. Importeerbaar werk is niet hetzelfde als door de docent beoordeeld werk.
+9. **Statische hosting heeft runtime-afhankelijkheden.** Python, Blockly en lettertypen zijn in de uiteindelijke versie lokaal meegeleverd. Er zijn geen CDN-verzoeken nodig. De eerste Python-uitvoering downloadt wel ongeveer 13,6 MB vanaf de website; de browserworker wordt pas bij gebruik gestart. De app gebruikt geen serviceworker voor gegarandeerd offline gebruik.
+10. **Didactische onderbouwing is een ontwerpgrondslag.** De aangeleverde bronnen zijn gelezen en de belangrijke ontwerpkeuzes staan in de handleiding. Actuele examenprogramma-aansluiting, oorspronkelijke wetenschappelijke literatuur en echte workshopfeedback moeten voor een definitieve academische inlevering nog door de betrokken docenten/studenten worden uitgewerkt. Oudere roosters uit de 2025-slides zijn niet als actuele 2026-planning overgenomen.
+
+Deze grenzen staan een bruikbare leswerkplaats niet in de weg, maar bepalen welke conclusies een leerling of docent verantwoord uit de resultaten kan trekken.

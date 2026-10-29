@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f6f2" />
+    <meta
+      name="description"
+      content="Bewijs je strategie. Bouw je agent. Daag jezelf uit. Matchlab verbindt wiskunde en informatica in een speelbaar lab voor 4 vwo."
+    />
+    <title>Matchlab — Bewijs. Bouw. Speel.</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Naar de inhoud</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Hoofdnavigatie">
+        <a href="#home" class="brand" aria-label="Matchlab start"
+          ><span class="brand-mark"><i></i><i></i><i></i><i></i></span
+          >matchlab<span class="brand-dot">.</span></a
+        >
+        <span class="sidebar-label">JOUW WERKPLAATS</span>
+        <nav id="navigation"></nav>
+        <div class="sidebar-project">
+          <span class="tiny-tag">HET PROJECT</span>
+          <div class="orbit-mini">✳</div>
+          <strong>Twee vakken.<br />Eén goed idee.</strong>
+          <p>Van wiskundig bewijs naar een agent die leert.</p>
+          <span class="subject-tag">wiskunde × informatica</span>
+        </div>
+        <div class="sidebar-bottom">
+          <button
+            class="nav-link"
+            data-view="teacher"
+            id="teacher-nav"
+          ></button>
+          <div class="student-card">
+            <span class="avatar">JIJ</span>
+            <div>
+              <strong>Jouw eigen lab</strong
+              ><small>4 vwo · werk lokaal bewaard</small>
+            </div>
+            <span class="online-dot"></span>
+          </div>
+        </div>
+      </aside>
+      <div class="main-shell">
+        <header class="topbar">
+          <div>
+            <span class="topbar-dot"></span> VAKDIDACTIEK 2
+            <span class="topbar-divider">/</span>
+            <span id="breadcrumb">Het lab</span>
+          </div>
+          <div class="topbar-actions">
+            <span id="save-status" role="status"
+              >Opgeslagen op dit apparaat</span
+            ><button
+              class="icon-button"
+              id="help-button"
+              aria-label="Hoe werkt Matchlab?"
+            >
+              ?
+            </button>
+          </div>
+        </header>
+        <main id="main" tabindex="-1"></main>
+        <footer>
+          <span>Een goed idee begint met een vraag.</span
+          ><span
+            >Matchlab · Wiskunde × Informatica
+            <a href="#teacher">Lesinformatie ↗</a></span
+          >
+        </footer>
+      </div>
+    </div>
+    <div id="toast" class="toast" role="status"></div>
+    <dialog id="help-dialog">
+      <div class="dialog-heading">
+        <span class="eyebrow">WELKOM IN MATCHLAB</span
+        ><button class="icon-button" id="close-help" aria-label="Sluiten">
+          ×
+        </button>
+      </div>
+      <h2>Van “waarom?” naar “werkt!”</h2>
+      <p>
+        1. Onderzoek vijf wiskundige tactieken en schrijf je bewijs.<br />2.
+        Programmeer je agent met Python of blokken.<br />3. Train en vergelijk
+        op nieuwe kaarten.<br />4. Speel, exporteer je agent en bespreek je
+        resultaten.
+      </p>
+      <p>
+        Je werk blijft in deze browser. Exporteer een agentbestand om een
+        back-up te bewaren of je werk bij je docent in te leveren. Python en
+        blokken laden bij het eerste gebruik vanuit deze website.
+      </p>
+      <button class="button primary" id="help-start">
+        Aan de slag <span>↗</span>
+      </button>
+    </dialog>
+    <input type="file" id="agent-file" accept="application/json,.json" hidden />
+    <input
+      type="file"
+      id="icon-file"
+      accept="image/png,image/jpeg,image/webp"
+      hidden
+    />
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "vakdidactiek-2-informatica",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "test": "node --test tests/*.test.js",
+    "test:browser": "node tools/run-browser-tests.mjs",
+    "build": "node tools/build.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
