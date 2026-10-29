@@ -16,13 +16,13 @@ Op Windows PowerShell kun je `npm.cmd start` gebruiken als de uitvoeringspolicy 
 
 ## Lesroute
 
-1. Onderzoek vijf wiskundige tactieken. De instapvraag kiest Python Studio bij een correct antwoord, anders Blokkenstudio. Beide routes blijven wisselbaar. Een geschreven bewijs wordt handmatig beoordeeld met zichtbare criteria.
-2. Kies **één** tactiek om in **tien minuten totaal** te programmeren, testen en vergelijken. De startcode bevat al imports, `class MijnAgent(EvaluationAgent)` of `class MijnAgent(MLAgent)` en `evaluate(self, observation, candidate)`. Leerlingen vullen een score, berekening of korte `if` in, op het niveau van de aangeleverde Fundamenta-voorbeelden. Een hogere eindige score betekent een eerdere inspectie. De engine voorkomt dubbele inspecties. Zie [de korte programmeeropdracht](docs/programming-10-minutes.md).
-3. Test, train met epsilon en alpha en valideer op nieuwe kaartparen tegen een willekeurige referentie. De grafiek toont werkelijk uitgevoerde batches.
-4. Speel een match tot vijf punten. De programmeerbare agent krijgt een ontworpen vertraging die afhangt van zijn zoekwerk. Er wordt geen wetenschappelijk gemeten menselijke reactiesnelheid geclaimd.
-5. Exporteer één JSON-bestand met code, leergewichten, parameters, iconen en bewijsuitwerkingen. De leerling levert het bestand zelf in. Importeer het op een ander apparaat of bij de docent. Een bestaand werk wordt bij import eerst als back-up gedownload.
+1. Start bij **Wiskunde**. Los een korte opgave op en schrijf je redenering op.
+2. Ga naar **Agent bouwen**. Kies Python of Blockly en maak één duidelijke score-regel. De blokken geven je variabelen voor kans, kosten, geleerde beloning en een kans-per-kosten-puzzel.
+3. Test je agent op nieuwe kaartparen. Training en leerparameters staan als verdieping onder het werkblad.
+4. Ga naar **Spelen**. Het spel gebruikt een potstapel in het midden en een eigen stapel voor jou en voor de agent. Per ronde trekt iedereen een kaart en zoek je de match met de potkaart.
+5. Exporteer één JSON-bestand met code, leergewichten, parameters, iconen en bewijsuitwerkingen. De leerling levert het bestand zelf in.
 
-De kaartontwerper heeft 57 eigen SVG-figuren, drie paletten en eigen PNG/JPG/WebP-iconen. Uploads worden lokaal naar kleine bitmapiconen geconverteerd. Kaarten gebruiken projectieve vlakken van orde 3, 5 of 7: 13, 31 of 57 kaarten met 4, 6 of 8 symbolen. Elk kaartpaar deelt exact één symbool. De lesopdrachten gebruiken acht symbolen.
+De kaartgenerator heeft 57 eigen SVG-figuren. Kaarten gebruiken projectieve vlakken van orde 3, 5 of 7: 13, 31 of 57 kaarten met 4, 6 of 8 symbolen. Elk kaartpaar deelt exact één symbool.
 
 ## Wat leert de agent?
 

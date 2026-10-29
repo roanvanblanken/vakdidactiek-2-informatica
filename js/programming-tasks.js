@@ -1,5 +1,5 @@
 /**
- * Five alternative ten-minute programming tasks, aligned with the math lessons.
+ * Five short programming puzzles, aligned with the math lessons.
  * A pair chooses ONE task for its programming slot. The import, class, method,
  * field access and return are supplied; students change the TODO section only.
  * Starters deliberately score every candidate equally and are valid Python.
@@ -8,7 +8,7 @@ export const programmingTasks = [
   {
     lessonId: "01",
     title: "Sla een afgekeurd icoon over",
-    goal: "Voeg één if-regel met een ingesprongen opdracht toe: een al gecontroleerd icoon krijgt een lagere score. De spelengine voorkomt herhaling al. Je controleert hier dus je bewijsregel; deze extra regel maakt de huidige agent niet sneller.",
+    goal: "Een gecontroleerd figuur mag geen prioriteit krijgen. Gebruik een if en geef het een lagere score.",
     starter: `from matchlab import EvaluationAgent
 
 class MijnAgent(EvaluationAgent):
@@ -44,7 +44,7 @@ class MijnAgent(EvaluationAgent):
   {
     lessonId: "02",
     title: "Laat het snelste icoon voorgaan",
-    goal: "Verander alleen score = 0. Gebruik tijd zodat een kortere controletijd een hogere score oplevert. Vergelijk deze regel bij gelijke matchkansen.",
+    goal: "Een snelle controle is handig. Geef een kortere herkenningstijd een hogere score.",
     starter: `from matchlab import EvaluationAgent
 
 class MijnAgent(EvaluationAgent):
@@ -78,7 +78,7 @@ class MijnAgent(EvaluationAgent):
   {
     lessonId: "03",
     title: "Laat de grootste kans voorgaan",
-    goal: "Verander alleen score = 0. Gebruik kans zodat de meest waarschijnlijke match de hoogste score krijgt. kans is al ingevuld vanuit het rekenmodel; je hoeft geen kans te berekenen of geheugen te programmeren.",
+    goal: "Gebruik de kans die al bij elk figuur staat. De grootste kans krijgt de hoogste score.",
     starter: `from matchlab import EvaluationAgent
 
 class MijnAgent(EvaluationAgent):
@@ -111,7 +111,7 @@ class MijnAgent(EvaluationAgent):
   {
     lessonId: "04",
     title: "Programmeer kans per seconde",
-    goal: "Verander alleen score = 0. Vertaal je bewezen verhouding naar één Pythonberekening met kans en tijd. tijd is altijd positief.",
+    goal: "Maak een slimme verhouding: kans gedeeld door herkenningstijd.",
     starter: `from matchlab import EvaluationAgent
 
 class MijnAgent(EvaluationAgent):
@@ -146,7 +146,7 @@ class MijnAgent(EvaluationAgent):
   {
     lessonId: "05",
     title: "Gebruik wat je agent geleerd heeft",
-    goal: "Verander alleen score = 0. Gebruik geleerd om de aangeleerde kansscore mee te laten tellen. Klik daarna op Train mijn agent en vergelijk. De trainer verzorgt de beloningen, het geheugen en het verkennen; jij schrijft de keuzeregel.",
+    goal: "Gebruik de geleerde beloning. De trainer geeft een punt als de eerste keuze raak is; jij gebruikt die ervaring.",
     starter: `from matchlab import EvaluationAgent
 
 class MijnAgent(EvaluationAgent):

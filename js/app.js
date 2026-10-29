@@ -121,11 +121,10 @@ function unlocked() {
 }
 function updateNavigation() {
   const items = [
-    ["home", "Het lab"],
+    ["home", "Start"],
     ["math", "Wiskunde"],
-    ["lab", "Agentstudio"],
-    ["arena", "De arena"],
-    ["icons", "Kaartontwerper"],
+    ["lab", "Agent bouwen"],
+    ["arena", "Spelen"],
   ];
   $("#navigation").innerHTML = items
     .map(
@@ -134,7 +133,7 @@ function updateNavigation() {
     )
     .join("");
   $("#teacher-nav").innerHTML = `${icon("teacher")}<span>Voor de docent</span>`;
-  $("#teacher-nav").classList.toggle("active", view === "teacher");
+  $("#teacher-nav").classList.remove("active");
 }
 function symbolArt(id) {
   if (state.customIcons?.[id])
@@ -182,6 +181,14 @@ function heading(eyebrow, title, description = "", right = "") {
 function renderHome() {
   const count = Object.keys(state.answers).length;
   const l = lessons[state.lessonIndex];
+  return `${heading("MATCHLAB", "Bouw een agent die kan kiezen.", "Begin met een korte wiskundevraag. Daarna geef je je regel aan een agent en speel je met drie stapels.")}
+  <section class="simple-start">
+    <div class="start-card primary-start"><span class="start-number">1</span><div><h2>Los een wiskundevraag op</h2><p>Onderzoek hoe je beslist welk figuur je eerst controleert.</p><a class="button primary" href="#math">Naar de opgaven</a></div></div>
+    <div class="start-card"><span class="start-number">2</span><div><h2>Bouw je agent</h2><p>Kies Python of blokken en geef je agent een score-regel.</p><a class="button" href="#lab">${count ? "Verder bouwen" : "Bekijk de agentstudio"}</a></div></div>
+    <div class="start-card"><span class="start-number">3</span><div><h2>Speel met drie stapels</h2><p>Een pot in het midden, jouw stapel en de stapel van je agent.</p><a class="button" href="#arena">Start het spel</a></div></div>
+  </section>
+  <p class="quiet-note">Je antwoorden en code blijven op dit apparaat staan.</p>`;
+  /*
   return `${heading("JOUW IDEEËN. JOUW REGELS.", "Welkom in je lab.", "Hier ontmoeten wiskunde, code en een beetje competitie elkaar.", `<span class="date-chip">${icon("calendar")} 4 vwo · 5 uitdagingen</span>`)}
   <section class="welcome-grid"><div class="hero-panel"><div><span class="eyebrow">VAN BEWIJS NAAR EEN SLIMME AGENT</span><h2 class="hero-title">Een match.<br><em>Duizend</em><br>mogelijkheden.</h2><p>Bewijs je strategie. Programmeer je agent.<br>En ontdek wie de match als eerste ziet.</p></div><a class="button primary" href="#math">${count ? "Verder met je uitdaging" : "Start je eerste uitdaging"} <span>↗</span></a><div class="hero-art" aria-hidden="true"><span class="hero-spark">✳</span>${cardHTML([0, 4, 8, 17, 6, 15, 21, 3])}${cardHTML([9, 12, 4, 14, 18, 1, 22, 10])}</div><span class="hero-footnote">ÉÉN MATCH. ELKE KEER.</span></div>
   <div class="mission-panel"><div class="panel-top"><span class="label">UITDAGING ${String(state.lessonIndex + 1).padStart(2, "0")}</span><span class="badge">WISKUNDE</span></div><h2>${esc(l.title)}</h2><p>Een slimme agent begint bij een goed onderbouwde keuze. Kun jij uitleggen waarom?</p><div class="mission-formula">P(match) <span>→</span> code <span>→</span> winst?</div><a class="text-link" href="#math">Onderzoek de tactiek <span>↗</span></a></div></section>
@@ -221,11 +228,13 @@ function renderHome() {
     )
     .join("")}</section>
   <div class="home-bottom"><div class="progress-panel"><div class="progress-ring" style="--p:${(count / 5) * 100}%" data-count="${count}/5"></div><div><h4>Elke goede vraag brengt je verder.</h4><p>${count ? `${count} instapvragen onderzocht · ${Object.values(state.proofs).filter((p) => p.trim()).length} eigen uitwerkingen bewaard` : "Je reis begint met je eerste wiskundige tactiek."}</p></div><a href="#math" class="text-link" aria-label="Naar de wiskunde">↗</a></div><a class="quick-panel" href="#icons">${icon("spark")}<div><h4>Jouw kaarten, jouw stijl.</h4><p>Kies een iconenset. Of maak het helemaal van jezelf.</p></div><span class="text-link">↗</span></a></div>`;
+  */
 }
 function renderMath() {
   const l = lessons[state.lessonIndex],
     answer = state.answers[l.id];
   selectedAnswer = answer?.choice || null;
+  return `${heading("WISKUNDE", "Welke keuze is slim?", "Beantwoord de opgaven en leg daarna kort uit waarom.", `<div class="step-indicator">${lessons.map((x) => `<i class="${state.answers[x.id] ? "complete" : ""}"></i>`).join("")}</div>`)}<div class="split-layout"><aside><div class="lesson-list">${lessons.map((x, i) => `<button class="lesson-link ${i === state.lessonIndex ? "active" : ""}" data-lesson="${i}"><span class="number">${state.answers[x.id] ? "✓" : i + 1}</span><span><strong>${esc(x.title)}</strong></span></button>`).join("")}</div></aside><article class="surface lesson-content"><span class="eyebrow">OPGAVE ${state.lessonIndex + 1} VAN ${lessons.length}</span><h2>${esc(l.title)}</h2><div class="context-box">${esc(l.context)}</div><div class="question-title">${esc(l.prompt)}</div><div class="options">${l.options.map((o) => `<button class="option ${selectedAnswer === o.id ? "selected" : ""} ${answer && o.id === answer.choice ? (answer.correct ? "correct" : "incorrect") : ""}" data-answer="${o.id}"><span class="letter">${esc(o.id.toUpperCase())}</span>${esc(o.text)}</button>`).join("")}</div><div id="answer-feedback">${answer ? feedbackHTML(l, answer) : ""}</div><button class="button primary" id="check-answer" ${!selectedAnswer ? "disabled" : ""}>${answer ? "Controleer opnieuw" : "Controleer antwoord"}</button><section class="proof-area"><h3>Leg je keuze uit</h3><p>${esc(l.proof)}</p><div class="field"><label for="proof-input">Jouw uitleg</label><textarea id="proof-input" placeholder="Schrijf je berekening en je aanname op.">${esc(state.proofs[l.id] || "")}</textarea></div><details><summary>Hint</summary><p>${esc(l.hint)}</p></details><div class="button-row"><button class="button purple" id="lesson-to-code" ${!answer ? "disabled" : ""}>Gebruik deze regel in je agent</button>${state.lessonIndex < 4 ? '<button class="button ghost" id="next-lesson">Volgende opgave</button>' : ""}</div></section></article></div>`;
   return `${heading("BEGRIJP DE STRATEGIE", "Eerst het bewijs.", "Vijf wiskundige uitdagingen; kies daarna één tactiek om in tien minuten te programmeren.", `<div class="step-indicator">${lessons.map((x) => `<i class="${state.answers[x.id] ? "complete" : ""}"></i>`).join("")}</div>`)}<div class="split-layout"><aside><div class="lesson-list">${lessons.map((x, i) => `<button class="lesson-link ${i === state.lessonIndex ? "active" : ""}" data-lesson="${i}"><span class="number">${state.answers[x.id] ? "✓" : String(i + 1).padStart(2, "0")}</span><span><strong>${esc(x.title)}</strong><small>${state.answers[x.id] ? "Instapvraag onderzocht" : "Kansrekening & strategie"}</small></span></button>`).join("")}</div><p class="lesson-aside-note">Werk in tweetallen. Eén denkt hardop, één stelt kritische vragen. Wissel na iedere uitdaging.<br><br>Een instapantwoord kiest je eerste programmeerroute. Je kunt daarna altijd wisselen.</p></aside><article class="surface lesson-content"><span class="eyebrow">UITDAGING ${state.lessonIndex + 1} / 5 · ${esc(l.kicker)}</span><h2>${esc(l.title)}</h2><p>${esc(l.objective)}</p><div class="context-box">${esc(l.context)}</div><div class="question-title">${esc(l.prompt)}</div><div class="options">${l.options.map((o) => `<button class="option ${selectedAnswer === o.id ? "selected" : ""} ${answer && o.id === answer.choice ? (answer.correct ? "correct" : "incorrect") : ""}" data-answer="${o.id}"><span class="letter">${esc(o.id.toUpperCase())}</span>${esc(o.text)}</button>`).join("")}</div><div id="answer-feedback">${answer ? feedbackHTML(l, answer) : ""}</div><button class="button primary" id="check-answer" ${!selectedAnswer ? "disabled" : ""}>${answer ? "Bekijk mijn route opnieuw" : "Onderzoek mijn antwoord"} <span>↗</span></button><section class="proof-area"><h3>Nu jij: onderbouw het.</h3><p>${esc(l.proof)}</p><div class="field"><label for="proof-input">Jouw redenering <span>Automatisch bewaard</span></label><textarea id="proof-input" placeholder="Noem je aannames. Laat je berekening zien. Leg uit wat dit voor je agent betekent.">${esc(state.proofs[l.id] || "")}</textarea></div><details><summary>Een zetje in de goede richting</summary><p>${esc(l.hint)}</p></details><details><summary>Controleer je bewijs met deze criteria</summary><ul>${(l.rubric || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ul><p>Bespreek je redenering met een klasgenoot of docent. De website beoordeelt een geschreven bewijs niet automatisch.</p></details><details><summary>Verdieping</summary><p>${esc(l.extension || "Vergelijk je voorspelling met resultaten uit de agentstudio.")}</p></details><div class="button-row"><button class="button purple" id="lesson-to-code" ${!answer ? "disabled" : ""}>Programmeer deze tactiek ${icon("code")}</button>${state.lessonIndex < 4 ? '<button class="button ghost" id="next-lesson">Volgende uitdaging →</button>' : ""}</div></section></article></div>`;
 }
 function feedbackHTML(l, a) {
@@ -236,6 +245,15 @@ function gate() {
 }
 function renderProgrammingSprint() {
   const task = programmingTasks[state.lessonIndex];
+  return `<section class="programming-sprint surface" aria-label="Programmeeropdracht">
+    <div class="panel-top"><span class="eyebrow">JOUW REGEL</span><span class="badge">PUZZEL</span></div>
+    <h2>${esc(task.title)}</h2>
+    <p>${esc(task.goal)}</p>
+    <div class="sprint-choice"><div class="field"><label for="coding-task">Kies een puzzel</label><select id="coding-task">${programmingTasks.map((t, i) => `<option value="${i}" ${i === state.lessonIndex ? "selected" : ""}>${i + 1}. ${esc(t.title)}</option>`).join("")}</select></div><button class="button small" id="load-programming-starter">Start opnieuw</button></div>
+    <details open><summary>Hint</summary><p>${esc(task.hint)}</p></details>
+    <div class="button-row">${task.lessonId === "05" ? '<button class="button purple" id="quick-train">Train 250 rondes</button>' : ""}<button class="button lime" id="quick-compare">Test 100 kaarten</button><button class="button ghost small" data-export>Exporteer</button></div>
+    ${task.lessonId === "05" ? '<div class="sprint-training" role="status"><span id="sprint-training-status">Klaar om te trainen</span><div class="progress-track" aria-label="Voortgang van de training"><div id="sprint-training-progress"></div></div></div>' : ""}
+  </section>`;
   return `<section class="programming-sprint surface" aria-label="Programmeeropdracht van tien minuten">
     <div class="panel-top"><span class="eyebrow">VAN BEWIJS NAAR CODE</span><span class="badge">10 MINUTEN TOTAAL</span></div>
     <h2>Eén tactiek. Een paar regels Python.</h2>
@@ -266,7 +284,7 @@ function loadProgrammingStarter() {
 function renderLab() {
   if (!unlocked())
     return `${heading("BEWIJS → CODE", "Jouw agentstudio.")}${gate()}`;
-  return `${heading("MAAK JE IDEE UITVOERBAAR", "Jouw agentstudio.", "Eén tactiek programmeren in circa tien minuten. Het raamwerk staat klaar.", `<div class="lab-header"><div class="segmented"><button data-mode="python" class="${state.mode === "python" ? "active" : ""}">Python Studio</button><button data-mode="blocks" class="${state.mode === "blocks" ? "active" : ""}">Blokkenstudio</button></div></div>`)}<div class="lab-grid"><div>${renderProgrammingSprint()}<div class="editor-panel"><div class="editor-top"><div class="window-dots"><i></i><i></i><i></i></div><span>${state.mode === "python" ? "mijn_agent.py" : "mijn_agent.blokken"} <span style="color:#9ca78f">/</span> ${esc(state.name)}</span><span>PYTHON 3</span></div>${
+  return `${heading("AGENT BOUWEN", "Jouw agentstudio.", "Kies een regel, bouw hem met code of blokken en test hem.", `<div class="lab-header"><div class="segmented"><button data-mode="python" class="${state.mode === "python" ? "active" : ""}">Python Studio</button><button data-mode="blocks" class="${state.mode === "blocks" ? "active" : ""}">Blokkenstudio</button></div></div>`)}<div class="lab-grid"><div>${renderProgrammingSprint()}<div class="editor-panel"><div class="editor-top"><div class="window-dots"><i></i><i></i><i></i></div><span>${state.mode === "python" ? "mijn_agent.py" : "mijn_agent.blokken"} <span style="color:#9ca78f">/</span> ${esc(state.name)}</span><span>PYTHON 3</span></div>${
     state.mode === "python"
       ? `<div class="editor-wrap"><div class="line-numbers" aria-hidden="true">${state.code
           .split("\n")
@@ -290,6 +308,7 @@ function renderLab() {
 }
 function renderArena() {
   const pair = choosePair(createDeck(state.q), rng(124));
+  return `${heading("SPEL", "Dobbel met drie stapels.", "De pot ligt in het midden. Jij en je agent trekken ieder een eigen kaart. Zoek het figuur dat op jouw kaart en de potkaart staat.")}<section class="arena simple-arena"><div class="arena-top"><span class="label" id="round-label">RONDE 1</span><div class="scoreboard"><b id="human-score">0</b><span>:</span><b id="agent-score">0</b></div><span class="badge" id="arena-state">KLAAR</span></div><div class="pile-counts"><span>Pot: <b id="draw-count">0</b></span><span>Jouw stapel: <b id="human-pile-count">0</b></span><span>Agentstapel: <b id="agent-pile-count">0</b></span></div><div class="arena-cards three-piles"><div class="player-zone"><div class="player-label">JOUW KAART</div><div id="human-card">${cardHTML(pair[0], "human", true)}</div></div><div class="player-zone center-pile"><div class="player-label">POTKAART</div><div id="center-card">${cardHTML(pair[1], "agent")}</div></div><div class="player-zone"><div class="player-label agent">AGENT</div><div id="agent-card">${cardHTML(pair[0], "agent")}</div></div></div><div class="arena-message" id="arena-message">Wie vindt de match het eerst?</div><p class="arena-submessage" id="arena-submessage">Klik op het gedeelde figuur op jouw kaart.</p><div class="arena-bottom"><button class="button primary" id="start-game">${icon("play")} Trek kaarten</button><button class="button ghost" id="next-round" hidden>Volgende ronde</button><button class="button ghost" id="reset-game" hidden>Nieuwe pot</button></div></section>`;
   return `${heading("CODE ONTMOET COMPETITIE", "Zie jij de match eerst?", "Twee kaarten. Precies één gedeeld figuur. Klik het aan op jouw kaart.")}<div class="play-toolbar"><span class="badge purple" id="arena-agent-label">${unlocked() ? "Jouw agentcode + leergeheugen" : "Voorbeeldagent · willekeurig zoeken"}</span><div class="field"><label for="pace">Agenttempo</label><select id="pace"><option value="1.5">Rustig · oefen eerst</option><option value="1" selected>Normaal</option><option value="0.75">Pittig</option></select></div></div><section class="arena"><div class="arena-top"><span class="label" id="round-label">EERSTE TOT 5 PUNTEN</span><div class="scoreboard"><b id="human-score">0</b><span>:</span><b id="agent-score">0</b></div><span class="badge" id="arena-state">KLAAR VOOR DE START</span></div><div class="arena-cards"><div class="player-zone"><div class="player-label"><i></i> JOUW KAART</div><div id="human-card">${cardHTML(pair[0], "human", true)}</div></div><div class="vs">vs.</div><div class="player-zone"><div class="player-label agent"><i></i> ${esc(state.name.toUpperCase())}</div><div id="agent-card">${cardHTML(pair[1], "agent")}</div></div></div><div class="arena-message" id="arena-message">Je strategie krijgt een tegenstander. Jij.</div><p class="arena-submessage" id="arena-submessage">Klik op start. Dan krijgt iedereen tegelijk een nieuw kaartpaar.</p><div class="arena-bottom"><button class="button primary" id="start-game">${icon("play")} Start de match</button><button class="button ghost" id="next-round" hidden>Volgende ronde →</button><button class="button ghost" id="reset-game" hidden>Nieuwe match</button></div></section><div class="arena-description"><div class="surface"><h3>Een tegenstander op speeltempo.</h3><p>De agent krijgt een vertraging die toeneemt met zijn zoekwerk, plus een beetje variatie. Dit is een ontworpen speltempo; geen gemeten gemiddelde reactietijd van mensen.</p></div><div class="surface"><h3>Je code speelt echt mee.</h3><p>De evaluate-scores uit je Python- of blokkenagent bepalen de inspectievolgorde. Een kortere zoekroute geeft de agent een voorsprong.</p></div><div class="surface"><h3>Een misser kost even tijd.</h3><p>Een fout figuur aanklikken geeft 700 ms pauze. Kijk dus goed. De eerste die vijf rondes wint, wint de match.</p></div></div>`;
 }
 function renderIcons() {
@@ -949,6 +968,20 @@ async function initBlockly() {
         tooltip:
           "Waar als dit symbool in de reeds gecontroleerde symbolen staat.",
       },
+      {
+        type: "match_reward",
+        message0: "geleerde beloning van dit figuur",
+        output: "Number",
+        colour: 105,
+        tooltip: "De beloning die dit figuur in eerdere rondes kreeg.",
+      },
+      {
+        type: "match_ratio",
+        message0: "kans gedeeld door kosten",
+        output: "Number",
+        colour: 230,
+        tooltip: "Een handige startpuzzel: kans per herkenningskost.",
+      },
     ]);
     gen.forBlock.match_value = (block) => [
       `candidate["${block.getFieldValue("FIELD")}"]`,
@@ -961,6 +994,14 @@ async function initBlockly() {
     gen.forBlock.match_checked = () => [
       'candidate["id"] in observation["checked"]',
       gen.ORDER_RELATIONAL || 11,
+    ];
+    gen.forBlock.match_reward = () => [
+      'candidate["q"]',
+      gen.ORDER_MEMBER || 2,
+    ];
+    gen.forBlock.match_ratio = () => [
+      'candidate["frequency"] / candidate["cost"]',
+      gen.ORDER_DIVISION || 5,
     ];
     gen.forBlock.match_score = (block, g) =>
       `return ${g.valueToCode(block, "SCORE", g.ORDER_NONE) || "0"}\n`;
@@ -976,26 +1017,38 @@ async function initBlockly() {
             contents: [
               { kind: "block", type: "match_score" },
               { kind: "block", type: "match_value" },
-              { kind: "block", type: "match_random" },
+              { kind: "block", type: "match_reward" },
             ],
           },
           {
             kind: "category",
-            name: "Rekenen",
+            name: "Puzzels",
             colour: 230,
             contents: [
-              { kind: "block", type: "math_number", fields: { NUM: 1 } },
+              { kind: "block", type: "match_ratio" },
+              { kind: "block", type: "match_value" },
               { kind: "block", type: "math_arithmetic" },
             ],
           },
           {
             kind: "category",
-            name: "Logica",
+            name: "Waarden",
+            colour: 230,
+            contents: [
+              { kind: "block", type: "math_number", fields: { NUM: 1 } },
+              { kind: "block", type: "variables_get" },
+              { kind: "block", type: "variables_set" },
+            ],
+          },
+          {
+            kind: "category",
+            name: "Als-dan",
             colour: 210,
             contents: [
               { kind: "block", type: "controls_if" },
               { kind: "block", type: "match_checked" },
               { kind: "block", type: "logic_compare" },
+              { kind: "block", type: "match_random" },
             ],
           },
         ],
@@ -1062,7 +1115,18 @@ function blocksToPython() {
   }\n`;
 }
 function bindArena() {
-  arena = { human: 0, agent: 0, round: 0, active: false, lockedUntil: 0 };
+  const deck = shuffled(createDeck(state.q));
+  arena = {
+    human: 0,
+    agent: 0,
+    round: 0,
+    active: false,
+    lockedUntil: 0,
+    drawPile: [...deck],
+    humanPile: shuffled(deck),
+    agentPile: shuffled(deck),
+  };
+  updatePileCounts();
   $("#start-game").onclick = startRound;
   $("#next-round").onclick = startRound;
   $("#reset-game").onclick = () => {
@@ -1075,6 +1139,12 @@ function bindArena() {
     if (b) clickSymbol(+b.dataset.symbol, b);
   };
 }
+function updatePileCounts() {
+  if (!arena) return;
+  $("#draw-count").textContent = arena.drawPile.length;
+  $("#human-pile-count").textContent = arena.humanPile.length;
+  $("#agent-pile-count").textContent = arena.agentPile.length;
+}
 async function startRound() {
   if (arena.active) return;
   clearTimeout(arenaTimer);
@@ -1086,16 +1156,20 @@ async function startRound() {
     : "Nieuwe kaarten klaarzetten…";
   $("#arena-submessage").textContent =
     "De ronde begint pas als beide kaarten zichtbaar zijn.";
-  const [mine, other] = choosePair(
-    createDeck(state.q),
-    Math.random,
-    state.parameters.environment,
-  );
+  if (!arena.drawPile.length || !arena.humanPile.length || !arena.agentPile.length) {
+    $("#arena-message").textContent = "De pot is leeg.";
+    $("#arena-submessage").textContent = "Klik op Nieuwe pot om opnieuw te schudden.";
+    $("#start-game").disabled = false;
+    return;
+  }
+  const center = arena.drawPile.pop();
+  const mine = arena.humanPile.pop();
+  const agentCard = arena.agentPile.pop();
   let steps;
   if (unlocked()) {
     try {
       const r = await pythonRequest("run", {
-        observation: { my_card: other, other_card: mine },
+        observation: { my_card: agentCard, other_card: center },
       });
       if (token !== roundToken) return;
       steps = r.searchCost ?? r.steps;
@@ -1110,17 +1184,20 @@ async function startRound() {
       return;
     }
   } else {
-    steps = shuffled(other).indexOf(commonSymbol(mine, other)) + 1;
+    steps = shuffled(agentCard).indexOf(commonSymbol(agentCard, center)) + 1;
   }
   if (token !== roundToken) return;
   arena.round++;
   arena.active = true;
-  arena.match = commonSymbol(mine, other);
+  arena.center = center;
+  arena.match = commonSymbol(mine, center);
   arena.started = performance.now();
   arena.lockedUntil = 0;
   $("#human-card").innerHTML = cardHTML(mine, "human", true);
-  $("#agent-card").innerHTML = cardHTML(other, "agent");
-  $("#round-label").textContent = `RONDE ${arena.round} · EERSTE TOT 5`;
+  $("#center-card").innerHTML = cardHTML(center, "agent");
+  $("#agent-card").innerHTML = cardHTML(agentCard, "agent");
+  updatePileCounts();
+  $("#round-label").textContent = `RONDE ${arena.round}`;
   $('[data-card="human"]').classList.remove("disabled");
   $("#arena-state").textContent = "ZOEK DE MATCH";
   $("#arena-message").textContent = "Eén figuur op allebei de kaarten. Welke?";
@@ -1128,7 +1205,7 @@ async function startRound() {
     "Klik het gedeelde figuur aan op jouw kaart.";
   $("#start-game").hidden = true;
   $("#reset-game").hidden = false;
-  const pace = Number($("#pace").value);
+  const pace = 1;
   arenaTimer = setTimeout(
     () => endRound("agent"),
     humanDelay(steps, Math.random, pace),
@@ -1167,8 +1244,9 @@ function endRound(winner) {
     : winner === "human"
       ? "Raak. Jij zag hem eerst!"
       : "De agent had hem nét eerder.";
+  updatePileCounts();
   $("#arena-submessage").textContent =
-    `De match was ${name.toLowerCase()}. ${winner === "human" ? `Gevonden in ${((performance.now() - arena.started) / 1000).toFixed(2)} seconden.` : "Welke tactiek zou hem nog sneller maken?"}${complete ? " Exporteer je agent en bespreek wat je hebt geleerd." : ""}`;
+    `De match was ${name.toLowerCase()}. ${winner === "human" ? `Jij vond hem in ${((performance.now() - arena.started) / 1000).toFixed(2)} seconden.` : "De agent was sneller."}`;
   const b = $(`[data-symbol="${arena.match}"]`);
   b?.classList.add("hit");
   $("#next-round").hidden = complete;

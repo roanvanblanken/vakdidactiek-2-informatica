@@ -2573,3 +2573,88 @@ footer a {
   font-family: "DM Sans", sans-serif !important;
   font-size: 11px !important;
 }
+/* The main route stays quiet; decorative panels remain available only on
+   their dedicated pages. */
+.simple-start {
+  display: grid;
+  gap: 14px;
+  max-width: 820px;
+}
+.sidebar-project,
+.sidebar-bottom > .nav-link {
+  display: none;
+}
+.start-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--white);
+}
+.start-card.primary-start {
+  border-color: #b7ca8a;
+  background: #f0f5e6;
+}
+.start-number {
+  display: grid;
+  flex: 0 0 34px;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 700;
+}
+.start-card h2 {
+  margin-bottom: 6px;
+  font-size: 23px;
+}
+.start-card p {
+  margin-bottom: 16px;
+  color: var(--muted);
+}
+.quiet-note {
+  max-width: 820px;
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.simple-arena {
+  max-width: 1100px;
+}
+.three-piles {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+}
+.center-pile {
+  transform: translateY(-18px);
+}
+.pile-counts {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin: 18px 0 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.pile-counts b {
+  color: var(--ink);
+}
+.blocks-host {
+  min-height: 430px;
+}
+@media (max-width: 900px) {
+  .three-piles {
+    grid-template-columns: 1fr;
+  }
+  .center-pile {
+    transform: none;
+    order: -1;
+  }
+  .pile-counts {
+    flex-wrap: wrap;
+  }
+}
