@@ -307,8 +307,9 @@ function renderLab() {
     )}<details><summary>Meer velden</summary><p>candidate: id, q, frequency (ook p), salience, cost.<br>observation: my_card, checked, memory, round. De andere kaart blijft bij de spelengine. Schrijf class MijnAgent(EvaluationAgent) of class MijnAgent(MLAgent), met evaluate(self, observation, candidate).</p></details></div><div class="surface"><span class="eyebrow">NEEM JE WERK MEE</span><div class="field"><label for="agent-name">Agentnaam</label><input id="agent-name" maxlength="100" value="${esc(state.name)}"></div><div class="button-row"><button class="button small" data-export>${icon("download")} Exporteer</button><button class="button small ghost" data-import>${icon("upload")} Importeer</button></div><p style="margin-top:13px">Code, leergeheugen, parameters en bewijsuitwerkingen in één JSON-bestand voor je docent.</p><a href="#arena" class="button lime" style="margin-top:17px;width:100%">Daag je agent uit ↗</a></div></aside></div>`;
 }
 function renderArena() {
-  const pair = choosePair(createDeck(state.q), rng(124));
-  return `${heading("SPEL", "Dobbel met drie stapels.", "De pot ligt in het midden. Jij en je agent trekken ieder een eigen kaart. Zoek het figuur dat op jouw kaart en de potkaart staat.")}<section class="arena simple-arena"><div class="arena-top"><span class="label" id="round-label">RONDE 1</span><div class="scoreboard"><b id="human-score">0</b><span>:</span><b id="agent-score">0</b></div><span class="badge" id="arena-state">KLAAR</span></div><div class="pile-counts"><span>Pot: <b id="draw-count">0</b></span><span>Jouw stapel: <b id="human-pile-count">0</b></span><span>Agentstapel: <b id="agent-pile-count">0</b></span></div><div class="arena-cards three-piles"><div class="player-zone"><div class="player-label">JOUW KAART</div><div id="human-card">${cardHTML(pair[0], "human", true)}</div></div><div class="player-zone center-pile"><div class="player-label">POTKAART</div><div id="center-card">${cardHTML(pair[1], "agent")}</div></div><div class="player-zone"><div class="player-label agent">AGENT</div><div id="agent-card">${cardHTML(pair[0], "agent")}</div></div></div><div class="arena-message" id="arena-message">Wie vindt de match het eerst?</div><p class="arena-submessage" id="arena-submessage">Klik op het gedeelde figuur op jouw kaart.</p><div class="arena-bottom"><button class="button primary" id="start-game">${icon("play")} Trek kaarten</button><button class="button ghost" id="next-round" hidden>Volgende ronde</button><button class="button ghost" id="reset-game" hidden>Nieuwe pot</button></div></section>`;
+  const previewDeck = shuffled(createDeck(state.q), rng(124));
+  const pair = [previewDeck[0], previewDeck[1], previewDeck[2]];
+  return `${heading("SPEL", "Dobbel met drie stapels.", "De pot ligt in het midden. Jij en je agent trekken ieder een eigen kaart. Zoek het figuur dat op jouw kaart en de potkaart staat.")}<section class="arena simple-arena"><div class="arena-top"><span class="label" id="round-label">RONDE 1</span><div class="scoreboard"><b id="human-score">0</b><span>:</span><b id="agent-score">0</b></div><span class="badge" id="arena-state">KLAAR</span></div><div class="pile-counts"><span>Pot: <b id="draw-count">0</b></span><span>Jouw stapel: <b id="human-pile-count">0</b></span><span>Agentstapel: <b id="agent-pile-count">0</b></span></div><div class="arena-cards three-piles"><div class="player-zone"><div class="player-label">JOUW KAART</div><div id="human-card">${cardHTML(pair[0], "human", true)}</div></div><div class="player-zone center-pile"><div class="player-label">POTKAART</div><div id="center-card">${cardHTML(pair[1], "agent")}</div></div><div class="player-zone"><div class="player-label agent">AGENT</div><div id="agent-card">${cardHTML(pair[2], "agent")}</div></div></div><div class="arena-message" id="arena-message">Wie vindt de match het eerst?</div><p class="arena-submessage" id="arena-submessage">Klik op het gedeelde figuur op jouw kaart.</p><div class="arena-bottom"><button class="button primary" id="start-game">${icon("play")} Trek kaarten</button><button class="button ghost" id="next-round" hidden>Volgende ronde</button><button class="button ghost" id="reset-game" hidden>Nieuwe pot</button></div></section>`;
   return `${heading("CODE ONTMOET COMPETITIE", "Zie jij de match eerst?", "Twee kaarten. Precies één gedeeld figuur. Klik het aan op jouw kaart.")}<div class="play-toolbar"><span class="badge purple" id="arena-agent-label">${unlocked() ? "Jouw agentcode + leergeheugen" : "Voorbeeldagent · willekeurig zoeken"}</span><div class="field"><label for="pace">Agenttempo</label><select id="pace"><option value="1.5">Rustig · oefen eerst</option><option value="1" selected>Normaal</option><option value="0.75">Pittig</option></select></div></div><section class="arena"><div class="arena-top"><span class="label" id="round-label">EERSTE TOT 5 PUNTEN</span><div class="scoreboard"><b id="human-score">0</b><span>:</span><b id="agent-score">0</b></div><span class="badge" id="arena-state">KLAAR VOOR DE START</span></div><div class="arena-cards"><div class="player-zone"><div class="player-label"><i></i> JOUW KAART</div><div id="human-card">${cardHTML(pair[0], "human", true)}</div></div><div class="vs">vs.</div><div class="player-zone"><div class="player-label agent"><i></i> ${esc(state.name.toUpperCase())}</div><div id="agent-card">${cardHTML(pair[1], "agent")}</div></div></div><div class="arena-message" id="arena-message">Je strategie krijgt een tegenstander. Jij.</div><p class="arena-submessage" id="arena-submessage">Klik op start. Dan krijgt iedereen tegelijk een nieuw kaartpaar.</p><div class="arena-bottom"><button class="button primary" id="start-game">${icon("play")} Start de match</button><button class="button ghost" id="next-round" hidden>Volgende ronde →</button><button class="button ghost" id="reset-game" hidden>Nieuwe match</button></div></section><div class="arena-description"><div class="surface"><h3>Een tegenstander op speeltempo.</h3><p>De agent krijgt een vertraging die toeneemt met zijn zoekwerk, plus een beetje variatie. Dit is een ontworpen speltempo; geen gemeten gemiddelde reactietijd van mensen.</p></div><div class="surface"><h3>Je code speelt echt mee.</h3><p>De evaluate-scores uit je Python- of blokkenagent bepalen de inspectievolgorde. Een kortere zoekroute geeft de agent een voorsprong.</p></div><div class="surface"><h3>Een misser kost even tijd.</h3><p>Een fout figuur aanklikken geeft 700 ms pauze. Kijk dus goed. De eerste die vijf rondes wint, wint de match.</p></div></div>`;
 }
 function renderIcons() {
@@ -336,7 +337,7 @@ function render() {
     home: "Het lab",
     math: "Wiskunde",
     lab: "Agentstudio",
-    arena: "De arena",
+    arena: "Spelen",
     icons: "Kaartontwerper",
     teacher: "Voor de docent",
   }[view];
@@ -1122,9 +1123,9 @@ function bindArena() {
     round: 0,
     active: false,
     lockedUntil: 0,
-    drawPile: [...deck],
-    humanPile: shuffled(deck),
-    agentPile: shuffled(deck),
+    drawPile: deck.filter((_, i) => i % 3 === 0),
+    humanPile: deck.filter((_, i) => i % 3 === 1),
+    agentPile: deck.filter((_, i) => i % 3 === 2),
   };
   updatePileCounts();
   $("#start-game").onclick = startRound;
@@ -1173,8 +1174,6 @@ async function startRound() {
       });
       if (token !== roundToken) return;
       steps = r.searchCost ?? r.steps;
-      $("#arena-agent-label").textContent =
-        `Jouw agent: ${state.name} · ${state.model.episodes} trainingen`;
     } catch (e) {
       if (token !== roundToken) return;
       $("#arena-message").textContent = "Je agent heeft hulp nodig.";
@@ -1229,6 +1228,8 @@ function endRound(winner) {
   arena.active = false;
   clearTimeout(arenaTimer);
   arena[winner]++;
+  if (winner === "human") arena.humanPile.push(arena.center);
+  else arena.agentPile.push(arena.center);
   $("#human-score").textContent = arena.human;
   $("#agent-score").textContent = arena.agent;
   $('[data-card="human"]').classList.add("disabled");
